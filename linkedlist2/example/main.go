@@ -11,13 +11,13 @@ func main() {
 	// singlyLinkList.Add(1)
 	// singlyLinkList.Add(1)
 
-	singlyLinkList.Add(1)
-	singlyLinkList.Add(2)
-	singlyLinkList.Add(3)
-	singlyLinkList.Add(4)
-	singlyLinkList.Add(5)
+	// singlyLinkList.Add(2)
+	// singlyLinkList.Add(4)
+	// singlyLinkList.Add(3)
+	// singlyLinkList.Add(3)
+	// singlyLinkList.Add(6)
+	// singlyLinkList.Add(3)
 	// singlyLinkList.Add(5)
-	singlyLinkList.Add(6)
 
 	// singlyLinkList.Add(0)
 	// singlyLinkList.Add(4)
@@ -32,7 +32,7 @@ func main() {
 	// singlyLinkList.Add(1)
 
 	fmt.Println("Linkedlist after insertion:-")
-	singlyLinkList.Display()
+	singlyLinkList.Display(nil)
 	// singlyLinkList.Remove(10)
 	// fmt.Println("Linkedlist after removal of node 3:-")
 	// singlyLinkList.Display()
@@ -124,6 +124,41 @@ func main() {
 	// singlyLinkList.Display()
 
 	//19.  Middle of the Linked List
-	singlyLinkList.MiddleNode(singlyLinkList.GetFirst())
-	singlyLinkList.Display()
+	// singlyLinkList.MiddleNode(singlyLinkList.GetFirst())
+	// singlyLinkList.Display()
+
+	/************ 22 December 2023 *****************/
+	//20. Reorder list
+	// singlyLinkList.ReorderList(singlyLinkList.GetFirst())
+	// singlyLinkList.Display()
+
+	//21. Reorder list
+	// singlyLinkList.ReorderList(singlyLinkList.GetFirst())
+	// singlyLinkList.Display()
+
+	//22. Add Two Numbers
+	//1st
+	singlyLinkList.Add(9)
+	singlyLinkList.Add(9)
+	singlyLinkList.Add(9)
+	singlyLinkList.Add(9)
+	singlyLinkList.Add(9)
+	singlyLinkList.Add(9)
+	singlyLinkList.Add(9)
+	//2nd
+	singlyLinkList2 := linkedlist2.NewSinglyLinkeList()
+	singlyLinkList2.Add(9)
+	singlyLinkList2.Add(9)
+	singlyLinkList2.Add(9)
+	singlyLinkList2.Add(9)
+	result := singlyLinkList.AddTwoNumbers(singlyLinkList.GetFirst(), singlyLinkList2.GetFirst())
+	singlyLinkList.Display(result)
+
+	//23. Insertion Sort List	..............................//remained
+	// singlyLinkList.InsertionSortList(singlyLinkList.GetFirst())
+	// singlyLinkList.Display()
+
+	//24. Next Greater Node In Linked List
+	singlyLinkList.NextLargerNodes(singlyLinkList.GetFirst())
+	singlyLinkList.Display(nil)
 }

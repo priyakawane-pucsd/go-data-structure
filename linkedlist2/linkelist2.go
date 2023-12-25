@@ -95,8 +95,13 @@ func (sl *SinglyLinkeList) Remove(value int) {
 	}
 }
 
-func (sl *SinglyLinkeList) Display() {
-	current := sl.start
+func (sl *SinglyLinkeList) Display(head *Node) {
+	var current *Node
+	if head == nil {
+		current = sl.start
+	} else {
+		current = head
+	}
 	for current != nil {
 		fmt.Printf("%d->", current.value)
 		current = current.next
@@ -455,35 +460,24 @@ func (sl *SinglyLinkeList) RemoveNodes(head *Node) *Node {
 		return head
 	}
 	start := head
-	var newlist, temp *Node
+	var stack []*Node
 
-	if head.value == head.next.value {
-		newlist = start
-		temp = start
-	}
-	for start.next != nil {
-		if start.next.value >= start.value {
-			if newlist == nil {
-				newlist = start.next
-				temp = start.next
-			} else {
-				fmt.Println("temp values.", temp.value)
-				temp.next = start.next
-				temp = temp.next
-			}
-		}
+	for start != nil {
+		stack = append(stack, start)
 		start = start.next
 	}
 
-	for newlist != nil {
-		fmt.Println("Newlist.", newlist.value)
-		newlist = newlist.next
+	top := len(stack) - 1
+	max := stack[top]
+	top--
+	for top >= 0 {
+		if stack[top].value >= max.value {
+			stack[top].next = max
+			max = stack[top]
+		}
+		top--
 	}
-	// for temp != nil {
-	// 	fmt.Println("Newlist.", temp.value)
-	// 	temp = temp.next
-	// }
-	return temp
+	return max
 }
 
 func (sl *SinglyLinkeList) MergeNodes(head *Node) *Node {
@@ -628,3 +622,253 @@ func (sl *SinglyLinkeList) MiddleNode(head *Node) *Node {
 	}
 	return getNode
 }
+
+func (sl *SinglyLinkeList) GetMiddleList(head *Node) *Node {
+	slow := head
+	fast := head
+
+	for fast != nil && fast.next != nil {
+		slow = slow.next
+		fast = fast.next.next
+	}
+
+	return slow
+}
+
+func (sl *SinglyLinkeList) ReorderList(head *Node) {
+	//Get middle of linked list
+	mid := sl.GetMiddleList(head)
+	start := mid.next
+	mid.next = nil
+
+	//push element into stack
+	var stack []int
+	for start != nil {
+		stack = append(stack, start.value)
+		start = start.next
+	}
+
+	current := head
+	top := len(stack) - 1
+	for top >= 0 {
+		next := current.next
+		newHead := &Node{value: stack[top]}
+		newHead.next = next
+		current.next = newHead
+		current = next
+		top--
+	}
+}
+
+func (sl *SinglyLinkeList) AddTwoNumbers(l1 *Node, l2 *Node) *Node {
+	var result, temp *Node
+	remainder := 0
+
+	//iterate over l1 & l2 list
+	for l1 != nil || l2 != nil {
+		//create new node
+		newNode := &Node{
+			value: 0,
+		}
+		//add value of l1 & l2 to newNode of value
+		if l1 != nil {
+			newNode.value += l1.value
+			l1 = l1.next
+		}
+		if l2 != nil {
+			newNode.value += l2.value
+			l2 = l2.next
+		}
+
+		newNode.value += remainder
+		remainder = 0
+		if newNode.value > 9 {
+			newNode.value = newNode.value - 10
+			remainder = 1
+		}
+		if result == nil {
+			temp = newNode
+			result = newNode
+		} else {
+			temp.next = newNode
+			temp = temp.next
+		}
+	}
+	if remainder > 0 {
+		newNode := &Node{
+			value: remainder,
+		}
+		temp.next = newNode
+	}
+	return result
+}
+
+func (sl *SinglyLinkeList) InsertionSortList(head *Node) *Node {
+	//get count of nodes in linked list
+	n := sl.CountNodes(head)
+	fmt.Println("Number of nodes.....", n)
+
+	//headPrev := head
+	headNext := head.next
+	head.next = nil
+	for headNext != nil {
+
+	}
+	return head
+}
+
+type nodeIndex struct {
+	node  *Node
+	index int
+}
+
+func (sl *SinglyLinkeList) NextLargerNodes(head *Node) []int {
+	n := sl.CountNodes(head)
+	var stack []nodeIndex
+	var arr = make([]int, n)
+	current := head
+	i := 0
+	top := -1
+	for current != nil {
+		for top > -1 && stack[top].node.value < current.value {
+			arr[stack[top].index] = current.value
+			stack = stack[:top]
+			top--
+		}
+		stack = append(stack, nodeIndex{node: current, index: i})
+		current = current.next
+		i++
+		top++
+	}
+	return arr
+}
+
+/*
+type Node struct {
+    val int
+    next *Node
+}
+
+type MyLinkedList struct {
+    head *Node
+    tail *Node
+}
+
+
+func Constructor() MyLinkedList {
+    return MyLinkedList{
+        head:nil,
+        tail:nil,
+    }
+}
+
+func (this *MyLinkedList) print(key string){
+    fmt.Print(key)
+    current:=this.head
+    for current!=nil{
+        fmt.Printf("%d->",current.val)
+        current=current.next
+    }
+    fmt.Println("nil")
+}
+
+func (this *MyLinkedList) Get(index int) int {
+
+    current := this.head
+    for i:=0;i<index && current!=nil;i++{
+        current = current.next
+    }
+    if current==nil{
+        return -1
+    }
+    return current.val
+}
+
+
+func (this *MyLinkedList) AddAtHead(val int)  {
+    defer this.print("AddAtHead")
+    newNode := &Node{
+        val : val,
+        next : this.head,
+    }
+    if this.tail == nil {
+        this.tail = newNode
+    }
+    this.head = newNode
+}
+
+
+func (this *MyLinkedList) AddAtTail(val int)  {
+    defer this.print("AddAtTail")
+    newEnd := &Node{
+        val : val,
+        next : nil,
+    }
+
+   if this.tail == nil {
+       this.tail =  newEnd
+       this.head = newEnd
+       return
+   }
+   this.tail.next = newEnd
+   this.tail = newEnd
+}
+
+
+func (this *MyLinkedList) AddAtIndex(index int, val int)  {
+    defer this.print("AddAtIndex")
+    current := this.head
+    newNode := &Node{
+        val : val,
+        next : nil,
+    }
+    if index == 0 {
+        newNode.next = this.head
+        this.head = newNode
+        if this.tail==nil{
+            this.tail = newNode
+        }
+        return
+    }
+    index-=1
+    for i:=0;i<index;i++{
+        current=current.next
+    }
+    newNode.next=current.next
+
+    current.next=newNode
+    if current == this.tail{
+        this.tail = newNode
+    }
+    return
+}
+
+
+func (this *MyLinkedList) DeleteAtIndex(index int)  {
+    defer this.print("DeleteAtIndex")
+    if index == 0 {
+        this.head = this.head.next
+        return
+    }
+
+    current := this.head
+    for index > 1 && current!=nil {
+        current = current.next
+        index --
+    }
+    if current==nil||current.next==nil{
+        return
+    }
+    current.next = current.next.next
+}
+
+
+/**
+ * Your MyLinkedList object will be instantiated and called as such:
+ * obj := Constructor();
+ * param_1 := obj.Get(index);
+ * obj.AddAtHead(val);
+ * obj.AddAtTail(val);
+ * obj.AddAtIndex(index,val);
+ * obj.DeleteAtIndex(index);
+*/
